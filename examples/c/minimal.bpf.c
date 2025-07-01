@@ -30,11 +30,13 @@ int handle_raw_tp(struct bpf_raw_tracepoint_args *ctx)
     if (/*pid != my_pid || */syscall_nr != 1)
         return 0;
 
-    struct syscall_event evt = {
-        .pid = pid,
-        .syscall_nr = syscall_nr,
-    };
+    // struct syscall_event evt = {
+    //     .pid = pid,
+    //     .syscall_nr = syscall_nr,
+    // };
 
-    bpf_perf_event_output(ctx, &events, BPF_F_CURRENT_CPU, &evt, sizeof(evt));
-    return 0;
+    // bpf_perf_event_output(ctx, &events, BPF_F_CURRENT_CPU, &evt, sizeof(evt));
+
+	bpf_printk("BPF triggered from PID %d.\n", pid);
+	return 0;
 }
