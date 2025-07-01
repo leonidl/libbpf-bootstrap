@@ -13,9 +13,9 @@ struct syscall_event {
     __u32 syscall_nr;
 };
 
-struct {
-    __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
-} events SEC(".maps");
+// struct {
+//     __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
+// } events SEC(".maps");
 
 // struct bpf_raw_tracepoint_args {
 //     __u64 args[6];
