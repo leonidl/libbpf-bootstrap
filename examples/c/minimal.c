@@ -43,8 +43,8 @@ int main(int argc, char **argv)
 		goto cleanup;
 	}
 
-	printf("Successfully started! Please run `sudo cat /sys/kernel/debug/tracing/trace_pipe` "
-	       "to see output of the BPF programs.\n");
+	printf("BPF program started (hooked to raw_tracepoint/sys_enter).\n"
+        "Check output using: `sudo dmesg` or `bpftool prog tracelog`\n");
 
 	for (;;) {
 		/* trigger our BPF program */

@@ -2,20 +2,32 @@
 /* Copyright (c) 2020 Facebook */
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
+#include <bpf/bpf_tracing.h>
+#include <bpf/bpf_core_read.h>
 
 char LICENSE[] SEC("license") = "Dual BSD/GPL";
 
 int my_pid = 0;
 
-SEC("tp/syscalls/sys_enter_write")
-int handle_tp(void *ctx)
+struct bpf_raw_tracepoint_args {
+    __u64 args[6];
+};
+
+SEC("raw_tracepoint/sys_enter")
+int handle_raw_tp(struct bpf_raw_tracepoint_args *ctx)
 {
-	int pid = bpf_get_current_pid_tgid() >> 32;
+    int pid = bpf_get_current_pid_tgid() >> 32;
+    int syscall_nr = ctx->args[1]; // args[1] is syscall number
 
-	// if (pid != my_pid)
-	// 	return 0;
+    // Uncomment to filter by PID
+    // if (pid != my_pid)
+    //     return 0;
 
-	bpf_printk("BPF triggered from PID %d.\n", pid);
+    // Filter: only log write() calls (syscall number varies by arch)
+    // For x86_64, write syscall is 1
+    if (syscall_nr == 1) {
+        bpf_printk("BPF triggered from PID %d on sys_write.\n", pid);
+    }
 
-	return 0;
+    return 0;
 }
