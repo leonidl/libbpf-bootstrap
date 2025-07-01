@@ -53,38 +53,38 @@ int main(int argc, char **argv)
     }
 
     // Pin program and map
-    err = bpf_program__pin(skel->progs.handle_raw_tp, "/sys/fs/bpf/myapp/raw_tp_sysenter");
-    if (err) {
-        fprintf(stderr, "Failed to pin BPF program\n");
-        goto cleanup;
-    }
+    // err = bpf_program__pin(skel->progs.handle_raw_tp, "/sys/fs/bpf/myapp/raw_tp_sysenter");
+    // if (err) {
+    //     fprintf(stderr, "Failed to pin BPF program\n");
+    //     goto cleanup;
+    // }
 
-    err = bpf_map__pin(skel->maps.events, "/sys/fs/bpf/myapp/events_map");
-    if (err) {
-        fprintf(stderr, "Failed to pin BPF map\n");
-        goto cleanup;
-    }
+    // err = bpf_map__pin(skel->maps.events, "/sys/fs/bpf/myapp/events_map");
+    // if (err) {
+    //     fprintf(stderr, "Failed to pin BPF map\n");
+    //     goto cleanup;
+    // }
 
-    err = minimal_bpf__attach(skel);
-    if (err) {
-        fprintf(stderr, "Failed to attach BPF skeleton\n");
-        goto cleanup;
-    }
+    // err = minimal_bpf__attach(skel);
+    // if (err) {
+    //     fprintf(stderr, "Failed to attach BPF skeleton\n");
+    //     goto cleanup;
+    // }
 
-    rb = ring_buffer__new(bpf_map__fd(skel->maps.events), handle_event, NULL, NULL);
-    if (!rb) {
-        fprintf(stderr, "Failed to create ring buffer\n");
-        err = 1;
-        goto cleanup;
-    }
+    // rb = ring_buffer__new(bpf_map__fd(skel->maps.events), handle_event, NULL, NULL);
+    // if (!rb) {
+    //     fprintf(stderr, "Failed to create ring buffer\n");
+    //     err = 1;
+    //     goto cleanup;
+    // }
 
     printf("Successfully started! Ctrl+C to exit.\n");
 
-    while (!exiting)
-        ring_buffer__poll(rb, 100);
+    // while (!exiting)
+    //     ring_buffer__poll(rb, 100);
 
 cleanup:
-    ring_buffer__free(rb);
+    // ring_buffer__free(rb);
     minimal_bpf__destroy(skel);
     return err != 0;
 }
