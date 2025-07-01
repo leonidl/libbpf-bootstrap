@@ -9,9 +9,9 @@ char LICENSE[] SEC("license") = "Dual BSD/GPL";
 
 int my_pid = 0;
 
-struct bpf_raw_tracepoint_args {
-    __u64 args[6];
-};
+// struct bpf_raw_tracepoint_args {
+//     __u64 args[6];
+// };
 
 SEC("raw_tracepoint/sys_enter")
 int handle_raw_tp(struct bpf_raw_tracepoint_args *ctx)
