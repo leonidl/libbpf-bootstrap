@@ -25,9 +25,9 @@ int handle_raw_tp(struct bpf_raw_tracepoint_args *ctx)
 
     // Filter: only log write() calls (syscall number varies by arch)
     // For x86_64, write syscall is 1
-    if (syscall_nr == 1) {
+//    if (syscall_nr == 1) {
         bpf_printk("BPF triggered from PID %d on sys_write.\n", pid);
-    }
+//    }
 
     return 0;
 }
