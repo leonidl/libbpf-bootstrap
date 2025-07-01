@@ -30,8 +30,7 @@ static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va
 int main(int argc, char **argv)
 {
     struct minimal_bpf *skel = NULL;
-	struct perf_buffer *pb = NULL;
-    // struct ring_buffer *rb = NULL;
+    struct ring_buffer *rb = NULL;
     int err;
 
     signal(SIGINT, sig_handler);
@@ -72,31 +71,20 @@ int main(int argc, char **argv)
         goto cleanup;
     }
 
-	pb = perf_buffer__new(bpf_map__fd(skel->maps.events), 8, handle_event, NULL, NULL, NULL);
-	if (!pb) {
-		fprintf(stderr, "Failed to open perf buffer\n");
-		err = 1;
-		goto cleanup;
-	}
-
-    // rb = ring_buffer__new(bpf_map__fd(skel->maps.events), handle_event, NULL, NULL);
-    // if (!rb) {
-    //     fprintf(stderr, "Failed to create ring buffer\n");
-    //     err = 1;
-    //     goto cleanup;
-    // }
+    rb = ring_buffer__new(bpf_map__fd(skel->maps.events), handle_event, NULL, NULL);
+    if (!rb) {
+        fprintf(stderr, "Failed to create ring buffer\n");
+        err = 1;
+        goto cleanup;
+    }
 
     printf("Successfully started! Ctrl+C to exit.\n");
 
-	while (!exiting)
-	    perf_buffer__poll(pb, 100);
-
-    // while (!exiting)
-    //     ring_buffer__poll(rb, 100);
+    while (!exiting)
+        ring_buffer__poll(rb, 100);
 
 cleanup:
-	perf_buffer__free(pb);
-    // ring_buffer__free(rb);
+    ring_buffer__free(rb);
     minimal_bpf__destroy(skel);
     return err != 0;
 }
